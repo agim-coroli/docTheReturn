@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Liste des Items</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        #searchBox {
+            margin-bottom: 15px;
+            padding: 8px;
+            width: 300px;
+            font-size: 16px;
+        }
+
+        #listeItems {
+            border-top: 2px solid #333;
+
+        }
+
+        .header,
+        .item {
+            display: flex;
+            align-items: center;
+
+        }
+
+        .header {
+            font-weight: bold;
+            background-color: #ddd;
+            border-bottom: 2px solid #333;
+        }
+
+        .item {
+            background-color: #f0f0f0;
+            margin-bottom: 5px;
+            background: rgba(0, 0, 0, 0.727);
+            color: white;
+            font-weight: bolder;
+        }
+
+        .col {
+            padding: 10px;
+            border-right: 1px solid #999;
+            min-width: 300px;
+            box-sizing: border-box;
+        }
+
+        .col:last-child {
+            border-right: none;
+        }
+
+        .col img {
+            width: 50px;
+            height: 50px;
+            background: #ccc;
+        }
+
+        #message {
+            display: none;
+            color: red;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        img {
+            width: 150px !important;
+            height: 100px !important;
+        }
+
+        li {
+            list-style-type: none;
+            color: black;
+            font-size: 120%;
+        }
+
+        a {
+            text-decoration: none;
+            color: black;
+            font-weight: bolder;
+
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        ul {
+            margin: 0;
+            border: 1px solid black;
+            padding: 0;
+
+        }
+    </style>
+</head>
+
+<body>
+    <div style="display: flex;">
+        <input type="text" id="searchBox" placeholder="Rechercher un item..." />
+        <ul style="display: flex; margin-left: 20px; margin-bottom: 20px; gap: 20px; padding: 0 10px 0 10px;">
+            <li><a style="line-height: 40px;" href="index.html">Items</a></li>
+            <li><a style="line-height: 40px;" href="arme.html">Armes</a></li>
+            <li><a style="line-height: 40px;" href="voiture.html">Voitures</a></li>
+        </ul>
+    </div>
+    <div id="message">Aucun résultat trouvé.</div>
+
+    <div id="listeItems">
+        <div class="header">
+            <div class="col">Item</div>
+            <div class="col">Commande IG</div>
+            <div class="col">Photo</div>
+        </div>
+    </div>
+
+    <script>
+        const items = [
+            { displayName: "Duage Antique", commandIG: "weapon_dagger", image: "https://www.lafoirfouille.fr/_next/image?url=https%3A%2F%2Fprod-api.lafoirfouille.fr%2Fmedias%2F10000164030-1200Wx1200H%3Fcontext%3DbWFzdGVyfGltYWdlc3w4Nzg1NHxpbWFnZS9qcGVnfGFXMWhaMlZ6TDJoaE5pOW9Nakl2T0RnME9ERXpNVGM0TkRjek5DNXFjR2N8ZGU5Y2Q1MGIwNmNhNjcwYjIxMmYwNDRlMzE1YmI3YWFlZjYxYzgyODc3MDc2ZWQ0M2JhMGI5OGQxMDVjN2VkMw&w=1920&q=75" },
+
+        ];
+
+        function afficherItems(liste) {
+            $("#listeItems .item").remove();
+            liste.forEach((item) => {
+                $("#listeItems").append(`
+    <div class="item" data-command="${item.commandIG}">
+      <div class="col">${item.displayName}</div>
+      <div class="col">${item.commandIG}</div>
+      <div class="col"><img src="${item.image}" alt=""></div>
+    </div>
+  `);
+            });
+        }
+
+        $(document).ready(function () {
+            afficherItems(items);
+
+            $("#searchBox").on("input", function () {
+                const recherche = $(this).val().toLowerCase();
+                let visible = 0;
+
+                $(".item").each(function () {
+                    const displayName = $(this).find(".col:first").text().toLowerCase();
+                    const commandIG = $(this).data("command").toLowerCase();
+                    if (
+                        displayName.includes(recherche) ||
+                        commandIG.includes(recherche)
+                    ) {
+                        $(this).show();
+                        visible++;
+                    } else {
+                        $(this).hide();
+                    }
+                });
+
+                if (visible === 0) {
+                    $("#message").show();
+                } else {
+                    $("#message").hide();
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

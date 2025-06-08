@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Liste des Items</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        #searchBox {
+            margin-bottom: 15px;
+            padding: 8px;
+            width: 300px;
+            font-size: 16px;
+        }
+
+        #listeItems {
+            border-top: 2px solid #333;
+
+        }
+
+        .header,
+        .item {
+            display: flex;
+            align-items: center;
+
+        }
+
+        .header {
+            font-weight: bold;
+            background-color: #ddd;
+            border-bottom: 2px solid #333;
+        }
+
+        .item {
+            background-color: #f0f0f0;
+            margin-bottom: 5px;
+            background: rgba(0, 0, 0, 0.727);
+            color: white;
+            font-weight: bolder;
+        }
+
+        .col {
+            padding: 10px;
+            border-right: 1px solid #999;
+            min-width: 300px;
+            box-sizing: border-box;
+        }
+
+        .col:last-child {
+            border-right: none;
+        }
+
+        .col img {
+            width: 50px;
+            height: 50px;
+            background: #ccc;
+        }
+
+        #message {
+            display: none;
+            color: red;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        img {
+            width: 150px !important;
+            height: 100px !important;
+        }
+
+        li {
+            list-style-type: none;
+            color: black;
+            font-size: 120%;
+        }
+
+        a {
+            text-decoration: none;
+            color: black;
+            font-weight: bolder;
+
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        ul {
+            margin: 0;
+            border: 1px solid black;
+            padding: 0;
+
+        }
+    </style>
+</head>
+
+<body>
+    <div style="display: flex;">
+        <input type="text" id="searchBox" placeholder="Rechercher un item..." />
+        <ul style="display: flex; margin-left: 20px; margin-bottom: 20px; gap: 20px; padding: 0 10px 0 10px;">
+            <li><a style="line-height: 40px;" href="index.html">Items</a></li>
+            <li><a style="line-height: 40px;" href="arme.html">Armes</a></li>
+            <li><a style="line-height: 40px;" href="arme.html">Armes</a></li>
+        </ul>
+    </div>
+    <div id="message">Aucun résultat trouvé.</div>
+
+    <div id="listeItems">
+        <div class="header">
+            <div class="col">Item</div>
+            <div class="col">Commande IG</div>
+            <div class="col">Photo</div>
+        </div>
+    </div>
+
+    <script>
+        const items = [
+            { displayName: "Duage Antique", commandIG: "weapon_dagger", image: "https://www.lafoirfouille.fr/_next/image?url=https%3A%2F%2Fprod-api.lafoirfouille.fr%2Fmedias%2F10000164030-1200Wx1200H%3Fcontext%3DbWFzdGVyfGltYWdlc3w4Nzg1NHxpbWFnZS9qcGVnfGFXMWhaMlZ6TDJoaE5pOW9Nakl2T0RnME9ERXpNVGM0TkRjek5DNXFjR2N8ZGU5Y2Q1MGIwNmNhNjcwYjIxMmYwNDRlMzE1YmI3YWFlZjYxYzgyODc3MDc2ZWQ0M2JhMGI5OGQxMDVjN2VkMw&w=1920&q=75" },
+            { displayName: "Batte de baseball", commandIG: "weapon_bat", image: "https://www.armurerie-centrale.fr/10496-home_default/batte-cold-steel-brooklyn-slammer-485-cm.jpg" },
+            { displayName: "Bouteille cassé", commandIG: "weapon_bottle", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ76jZZiNQh9QvCB4EHUWiT9tB6_Ta7-OSixw&s" },
+                        { displayName: "Pied de biche", commandIG: "weapon_crowbar", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTLfqtwWpnoQsTsd_LlqrcLagis-JMAzarHdA&s" },
+            { displayName: "Lampe torche", commandIG: "weapon_flashlight", image: "https://contents.mediadecathlon.com/p2572940/k$dd56654d9bb4de417633236362056e5c/sq/lampe-torche-rechargeable-300-lumens-tl900.jpg?format=auto&f=800x0" },
+            { displayName: "Club de golf", commandIG: "weapon_golfclub", image: "https://www.worldshop.eu/medias/img/8902840090654_w1500_z_6830532/option-golf-eisen-ir-sport-4-9-p-graphite-shaft-golf-club-silver.jpeg" },
+            { displayName: "Marteau", commandIG: "weapon_hammer", image: "https://media.gettyimages.com/id/1283087255/fr/vectoriel/ic%C3%B4ne-hammer-sur-fond-transparent.jpg?s=612x612&w=gi&k=20&c=qCimoy4VtYRk3qS806hPCJ06nxOk2e7NYj-L_efErJo=" },
+            { displayName: "Hachette", commandIG: "weapon_hatchet", image: "https://www.leborgne.fr/medias2/1/219/m/hachette-awax-duopro_06T1.jpg" },
+            { displayName: "Coup-de-poing américain", commandIG: "weapon_knuckle", image: "https://www.paratrooper.fr/815-large_default/coup-de-poing-americain-noir.jpg" },
+            { displayName: "Couteau", commandIG: "weapon_knife", image: "https://www.materiel-horeca.be/4569-large_default/couteau-cuisine-dp-tojiro-210-mm.jpg" },
+            { displayName: "Machette", commandIG: "weapon_machete", image: "https://img.pecheur.com/machette-country-acier-z-1946-194642.jpg" },
+            { displayName: "Couteau à cran d'arrêt", commandIG: "weapon_switchblade", image: "https://www.galeriedemars.fr/124697-large_default/couteau-a-cran-darret-ouverture-automatique-stylet-italien-rostfrei-allemagne-xxe.jpg" },
+            { displayName: "Matraque", commandIG: "weapon_nightstick", image: "https://www.decoagogo.fr/media/catalog/product/cache/13/image/9df78eab33525d08d6e5fb8d27136e95/p/o/polizeiknueppel-tonfa-spielzeug.jpg" },
+            { displayName: "Clé à molette", commandIG: "weapon_wrench", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQdXMxS8l1sfCq5QJQ6SAFEeGrsWOr4vVH2Yw&s" },
+            { displayName: "Hache de combat", commandIG: "weapon_battleaxe", image: "https://www.repliksword.com/8149-large_default/hache-tactique-hachette-tomahawk-m48-uc2765.jpg" },
+            { displayName: "Queue de billard", commandIG: "weapon_poolcue", image: "https://www.supreme.fr/132-large_default/queue-billard-standard-133-cm-1pc-virole-laiton-embout-visse-11mm.jpg" },
+            { displayName: "Hachette en pierre", commandIG: "weapon_stone_hatchet", image: "https://m.media-amazon.com/images/I/51nEu2XMUVL._AC_UF1000,1000_QL80_.jpg" },
+            { displayName: "Canne en sucre d'orge", commandIG: "weapon_candycane", image: "https://www.bonbonz.be/161-thickbox_default/candy-cane-rouge-blanc-cane-bonbon.jpg" },
+            { displayName: "Pistolet", commandIG: "weapon_pistol", image: "https://armurerie-billau.be/cdn/shop/products/pistolet-semi-auto-cz-75b-9mm-para-armes-de-poing-a-feu_937_1200x1200.jpg?v=1575314358" },
+            { displayName: "Pistolet Mk II", commandIG: "weapon_pistol_mk2", image: "https://www.destockage-games.com/catalogue-pistolet-mk2-co2-nbb-asg-bi-ton-silver/image/mini/5707843055468_000_pistolet_mk2_co2_nbb_asg_17684_.jpg.webp" },
+            { displayName: "Pistolet de combat", commandIG: "weapon_combatpistol", image: "https://armesbastille.com/15890/pistolet-canik-taran-tactical-tti-combat-cal-9x19.jpg" },
+            { displayName: "Pistolet AP", commandIG: "weapon_appistol", image: "https://armesbastille.com/15890/pistolet-canik-taran-tactical-tti-combat-cal-9x19.jpg" },
+            { displayName: "Taser", commandIG: "weapon_stungun", image: "https://a.storyblok.com/f/198504/1866x802/1fd4f2543a/axon_vr_2023-8922_extendclipped-2.jpg/m/3840x0/filters:quality(75):format(webp)" },
+            { displayName: "Pistolet .50", commandIG: "weapon_pistol50", image: "https://www.armurerie-lavaux.com/images/produits/5/1/1/3/opti/pistolet-desert-eagle-black-6-cal-50-ae.jpg" },
+            { displayName: "Pistolet SNS", commandIG: "weapon_snspistol", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSXdlIiQuvN7vqLqZwXPMaLjqsKduCtbPATAA&s" },
+            { displayName: "Pistolet SNS Mk II", commandIG: "weapon_snspistol_mk2", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSXdlIiQuvN7vqLqZwXPMaLjqsKduCtbPATAA&s" },
+            { displayName: "Pistolet lourd", commandIG: "weapon_heavypistol", image: "https://www.provencetir.com/5917-large_default/pistolet-kmr-w-02-umbra-9x19.jpg" },
+            { displayName: "Pistolet vintage", commandIG: "weapon_vintagepistol", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRjqP99e3TmdBPvKthTZ1eAMFMlJkWy5viy7A&s" },
+            { displayName: "Pistolet de détresse", commandIG: "weapon_flaregun", image: "https://static.weezbe.com/harrycalahanmilitaria/Images/products/p_4780G_240308182625.jpg" },
+            { displayName: "Pistolet marksman", commandIG: "weapon_marksmanpistol", image: "https://one.nbstatic.fr/uploaded/20210624/8111454/00001_pistolet-co2-MARKSMAN--repeater.jpg" },
+            { displayName: "Revolver lourd", commandIG: "weapon_revolver", image: "https://www.armoccase.com/modules/ph_simpleblog/covers/12.png" },
+            { displayName: "Revolver lourd Mk II", commandIG: "weapon_revolver_mk2", image: "https://resilience-urbaine.com/wp-content/uploads/2017/03/smith_and_wesson_trr8.jpg" },
+            { displayName: "Revolver double action", commandIG: "weapon_doubleaction", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/Colt_45_M1878-NMAH-AHB2015q021058.jpg/1200px-Colt_45_M1878-NMAH-AHB2015q021058.jpg" },
+            { displayName: "Up-n-Atomizer", commandIG: "weapon_raypistol", image: "https://cdn.thingiverse.com/assets/fd/87/bd/2a/ff/large_display_up-n-atomizer_final_2020-Apr-08_12-52-27AM-000_CustomizedView2561388436_jpg.jpg" },
+            { displayName: "Pistolet en céramique", commandIG: "weapon_ceramicpistol", image: "https://www.wanderlust-conceptstore.com/wp-content/uploads/2023/09/PISTOLET-GUN-GOLD-SELETTI-CERAMIQUE-1.png" },
+            { displayName: "Revolver de la marine", commandIG: "weapon_navyrevolver", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/Colt_Navy_Model_1851.JPG/1200px-Colt_Navy_Model_1851.JPG" },
+            { displayName: "Pistolet Perico", commandIG: "weapon_gadgetpistol", image: "https://static.wikia.nocookie.net/gtawiki/images/6/65/PericoPistol-GTAO.png/revision/latest?cb=20211223012524" },
+            { displayName: "Pistolet WM 29", commandIG: "weapon_pistolxm3", image: "https://www.gtabase.com/images/gta-5/weapons/handguns/wm-29-pistol.png" },
+            { displayName: "Micro SMG", commandIG: "weapon_microsmg", image: "https://shootingrangeprague.com/media/CACHE/images/images/Snímek_obrazovky_2024-03-13_v10.13.44/0a9bea8bcb70f93cd0136130809e61c1.jpg" },
+            { displayName: "SMG", commandIG: "weapon_smg", image: "https://www.m416gelblaster.com/cdn/shop/collections/smg-gel-blaster.webp?v=1699889418" },
+            { displayName: "SMG Mk II", commandIG: "weapon_smg_mk2", image: "https://static.wikia.nocookie.net/gtawiki/images/9/9e/SMGMkII-GTAV.png/revision/latest/scale-to-width-down/1200?cb=20180108195635" },
+            { displayName: "SMG d'assaut", commandIG: "weapon_assaultsmg", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRM4cWmOYSBIUnjcd4IGf50xxrXIngDUKh0jQ&s" },
+            { displayName: "PDW de combat", commandIG: "weapon_combatpdw", image: "https://staticg.sportskeeda.com/editor/2022/11/77479-16679697906147.png" },
+            { displayName: "Pistolet-mitrailleur", commandIG: "weapon_machinepistol", image: "https://docs.fivem.net/weapons/WEAPON_MACHINEPISTOL.png" },
+            { displayName: "Mini SMG", commandIG: "weapon_minismg", image: "https://docs.fivem.net/weapons/WEAPON_MINISMG.png" },
+            { displayName: "Unholy Hellbringer", commandIG: "weapon_raycarbine", image: "Unholy Hellbringer https://staticg.sportskeeda.com/editor/2021/02/7ea5b-16123363384319.png?w=640$" },
+            { displayName: "SMG tactique", commandIG: "weapon_tecpistol", image: "https://static.wikia.nocookie.net/gtawiki/images/d/df/TacticalSMG-GTAOe.png/revision/latest?cb=20230615101806" },
+            { displayName: "Fusil à pompe", commandIG: "weapon_pumpshotgun", image: "https://docs.altv.mp/gta/images/weapon/models/weapon_pumpshotgun_thumbnail.png" },
+            { displayName: "Fusil à pompe Mk II", commandIG: "weapon_pumpshotgun_mk2", image: "https://static.wikia.nocookie.net/gtawiki/images/1/14/PumpShotgunMkII-GTAV.png/revision/latest?cb=20180108202428" },
+            { displayName: "Fusil à canon scié", commandIG: "weapon_sawnoffshotgun", image: "https://docs.fivem.net/weapons/WEAPON_SAWNOFFSHOTGUN.png" },
+            { displayName: "Fusil à pompe d'assaut", commandIG: "weapon_assaultshotgun", image: "https://docs.fivem.net/weapons/WEAPON_ASSAULTSHOTGUN.png" },
+            { displayName: "Fusil à pompe bullpup", commandIG: "weapon_bullpupshotgun", image: "https://static.wikia.nocookie.net/gtawiki/images/d/dc/BullpupShotgun-GTAV.png/revision/latest?cb=20180108202503" },
+            { displayName: "Fusil à pompe lourd", commandIG: "weapon_heavyshotgun", image: "https://static.wikia.nocookie.net/gtawiki/images/0/0a/HeavyShotgun-GTAV.png/revision/latest?cb=20180108202953" },
+            { displayName: "Fusil à double canon", commandIG: "weapon_dbshotgun", image: "https://docs.fivem.net/weapons/WEAPON_DBSHOTGUN.png" },
+            { displayName: "Fusil à pompe automatique", commandIG: "weapon_autoshotgun", image: "https://docs.fivem.net/weapons/WEAPON_AUTOSHOTGUN.png" },
+            { displayName: "Fusil à pompe de combat", commandIG: "weapon_combatshotgun", image: "https://docs.fivem.net/weapons/WEAPON_COMBATSHOTGUN.png" },
+            { displayName: "Fusil d'assaut", commandIG: "weapon_assaultrifle", image: "https://docs.fivem.net/weapons/WEAPON_ASSAULTRIFLE.png" },
+            { displayName: "Fusil d'assaut Mk II", commandIG: "weapon_assaultrifle_mk2", image: "https://vespura.com/fivem/weapons/images/WEAPON_ASSAULTRIFLE_MK2.png" },
+            { displayName: "Carabine", commandIG: "weapon_carbinerifle", image: "https://docs.altv.mp/gta/images/weapon/models/weapon_carbinerifle_thumbnail.png" },
+            { displayName: "Carabine Mk II", commandIG: "weapon_carbinerifle_mk2", image: "https://vespura.com/fivem/weapons/images/WEAPON_CARBINERIFLE_MK2.png" },
+            { displayName: "Fusil avancé", commandIG: "weapon_advancedrifle", image: "https://vespura.com/fivem/weapons/images/WEAPON_ADVANCEDRIFLE.png" },
+            { displayName: "Carabine spéciale", commandIG: "weapon_specialcarbine", image: "https://docs.altv.mp/gta/images/weapon/models/weapon_specialcarbine_mk2_thumbnail.png" },
+            { displayName: "Carabine spéciale Mk II", commandIG: "weapon_specialcarbine_mk2", image: "https://www.gtabase.com/images/gta-5/weapons/assault-rifles/special-carbine-mk2.png" },
+            { displayName: "Fusil bullpup", commandIG: "weapon_bullpuprifle", image: "https://docs.altv.mp/gta/images/weapon/models/weapon_bullpuprifle_thumbnail.png" },
+            { displayName: "Fusil bullpup Mk II", commandIG: "weapon_bullpuprifle_mk2", image: "https://vespura.com/fivem/weapons/images/WEAPON_BULLPUPRIFLE_MK2.png" },
+            { displayName: "Fusil compact", commandIG: "weapon_compactrifle", image: "https://www.gtabase.com/images/gta-5/weapons/assault-rifles/compact-rifle.png" },
+            { displayName: "Fusil militaire", commandIG: "weapon_militaryrifle", image: "https://docs.altv.mp/gta/images/weapon/models/weapon_militaryrifle_thumbnail.png" },
+            { displayName: "Fusil lourd", commandIG: "weapon_heavyrifle", image: "https://docs.altv.mp/gta/images/weapon/models/weapon_heavyrifle_thumbnail.png" },
+            { displayName: "Fusil tactique", commandIG: "weapon_tacticalrifle", image: "https://docs.altv.mp/gta/images/weapon/models/weapon_heavyrifle_thumbnail.png" },
+            { displayName: "Mitrailleuse", commandIG: "weapon_mg", image: "https://docs.altv.mp/gta/images/weapon/models/weapon_mg_thumbnail.png" },
+            { displayName: "Mitrailleuse de combat", commandIG: "weapon_combatmg", image: "https://vespura.com/fivem/weapons/images/WEAPON_COMBATMG.png" },
+            { displayName: "Mitrailleuse de combat Mk II", commandIG: "weapon_combatmg_mk2", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQm3vj-SAQYvGBEGVQjl7PZviZgIMhlmeUKOA&s" },
+
+            
+            { displayName: "Mitrailleuse Gusenberg", commandIG: "weapon_gusenberg", image: "https://static1.millenium.org/article_old/images/contenu/actus/JeuxVideo/GTA_V/Armes/Gusenberg-GTAV-fullmodel.png" },
+            { displayName: "Fusil de sniper", commandIG: "weapon_sniperrifle", image: "https://sport-attitude.com/files/bibliotheque/photos-produits/PCKLR3052-01.jpg?v=2022-09-13%2009%3A17%3A37" },
+            { displayName: "Sniper lourd", commandIG: "weapon_heavysniper", image: "https://upload.wikimedia.org/wikipedia/commons/6/62/M107_1.jpg" },
+            { displayName: "Sniper lourd Mk II", commandIG: "weapon_heavysniper_mk2", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxGHC06Ee2EtihPexVFX7brBQ5f2rs17ESyQ&s" },
+            { displayName: "Fusil marksman", commandIG: "weapon_marksmanrifle", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQVLAuJse890blX7RCHo4vKZEuLywFrrVB0Hg&s" },
+            { displayName: "Fusil marksman Mk II", commandIG: "weapon_marksmanrifle_mk2", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTgg--wuuiZhUJWrYgedihvq0WQseQJJfyLWg&s" },
+            { displayName: "Fusil de précision", commandIG: "weapon_precisionrifle", image: "https://encyclopedie-des-armes.com/images/stories/sniper/PSR_Contenders.jpg" },
+            { displayName: "Mousquet", commandIG: "weapon_musket", image: "https://lacasadelrecreador-431a.kxcdn.com/7554-home_default/mousquet-noerdlingen.jpg" },
+            { displayName: "Lance-roquettes", commandIG: "weapon_rpg", image: "https://pm1.aminoapps.com/7364/21e0868dca95ed859f291a6d07092e397e04e6f6r1-800-526v2_uhq.jpg" },
+            { displayName: "Lance-grenades", commandIG: "weapon_grenadelauncher", image: "https://www.ops-store.fr/upload/image/lance-grenades-mgl-tan-ics-p-image-180951-grande.jpg" },
+            { displayName: "Lance-grenades fumigène", commandIG: "weapon_grenadelauncher_smoke", image: "https://www.bubble-diving.com/media/catalog/product/cache/12/image/9df78eab33525d08d6e5fb8d27136e95/l/a/lance-grenade-mgl--multiple-grenade-launcher----ics-airsoft-p-image-32802-grande.jpg" },
+            { displayName: "Minigun", commandIG: "weapon_minigun", image: "https://static1.gunfire.com/hpeciai/9e6cfa6ebd1a560809742fbc21781e5c/fre_pl_Replique-du-canon-miniature-M134-A2-Vulcan-1152213565_2.webp" },
+            { displayName: "Lance-feux d'artifice", commandIG: "weapon_firework", image: "https://amerikaantje.be/wp-content/uploads/2020/10/kombatuk-2446-1.jpg" },
+            { displayName: "Railgun", commandIG: "weapon_railgun", image: "https://static.wikia.nocookie.net/helldivers_gamepedia/images/8/8d/RS-422_Railgun_Render.png/revision/latest?cb=20240413212811" },
+            { displayName: "Lance-missiles à tête chercheuse", commandIG: "weapon_hominglauncher", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT5RqxLN60VKXMlMfH-nTiXopsxU_vDCdBarg&s" },
+            { displayName: "Lance-grenades compact", commandIG: "weapon_compactlauncher", image: "https://media.phenixairsoft.com/41714-large_default/lance-grenade-40mm-compact-cyma.jpg" },
+            { displayName: "Minigun Lazer", commandIG: "weapon_rayminigun", image: "https://docs.fivem.net/weapons/WEAPON_RAYMINIGUN.png" },
+            { displayName: "Lance-EMP compact", commandIG: "weapon_emplauncher", image: "https://static.wikia.nocookie.net/gtawiki/images/4/4b/CompactEMPLauncher-GTAOe-SocialClub.png/revision/latest/scale-to-width-down/250?cb=20211226064712" },
+            { displayName: "Railgun (XM3)", commandIG: "weapon_railgunxm3", image: "https://i.pinimg.com/736x/17/64/f9/1764f98e86662647a2609a5277f029da.jpg" },
+            { displayName: "Grenade", commandIG: "weapon_grenade", image: "https://d3n898qob6erx6.cloudfront.net/hazards/1777/images/mk2-001.jpg" },
+            { displayName: "Gaz BZ", commandIG: "weapon_bzgas", image: "https://static.wikia.nocookie.net/gtawiki/images/3/37/BZGas-GTAVe.png/revision/latest/scale-to-width-down/250?cb=20211209055349" },
+            { displayName: "Cocktail Molotov", commandIG: "weapon_molotov", image: "https://m.media-amazon.com/images/I/51KEIpP7YvL._AC_UF894,1000_QL80_.jpg" },
+            { displayName: "Bombe collante", commandIG: "weapon_stickybomb", image: "https://ih1.redbubble.net/image.191244961.4683/flat,750x,075,f-pad,750x1000,f8f8f8.u2.jpg" },
+            { displayName: "Mines de proximité", commandIG: "weapon_proxmine", image: "https://i.etsystatic.com/45918828/r/il/7f546e/5189484288/il_570xN.5189484288_t1c2.jpg" },
+            { displayName: "Boule de neige", commandIG: "weapon_snowball", image: "https://i-mom.unimedias.fr/2023/02/09/boules_de_neige.jpg?auto=format%2Ccompress&crop=faces&cs=tinysrgb&fit=crop&h=501&w=890" },
+            { displayName: "Bombe tuyau", commandIG: "weapon_pipebomb", image: "https://st3.depositphotos.com/29384342/35364/i/1600/depositphotos_353648502-stock-photo-pipe-bomb-ignition-cord.jpg" },
+            { displayName: "Balle de baseball", commandIG: "weapon_ball", image: "https://upload.wikimedia.org/wikipedia/commons/1/1e/Baseball_%28crop%29.jpg" },
+            { displayName: "Gaz lacrymogène", commandIG: "weapon_smokegrenade", image: "https://www.armurerie-lavaux.com/images/produits/2/2/3/8/6/opti/bombe-lacrymogene-gaz-cs-70-we-protect-100ml-avec-poignee.png" },
+            { displayName: "Fumigène", commandIG: "weapon_flare", image: "https://www.fumigene-a-main.com/cdn/shop/products/fumigene-a-main-de-stade-couleur-jaune-mariage.jpg?v=1612802099" },
+            { displayName: "cal 50 pistol", commandIG: "ammo-50", image: "https://preview.redd.it/how-could-anyone-not-love-a-50-caliber-handgun-v0-c9hengipa5fd1.jpeg?auto=webp&s=9f9b68a320c8c44853d318141c90b44665dc9c53" },
+            { displayName: "cal .45acp", commandIG: "ammo-45", image: "https://www.cobra-ts.eu/image/catalog/munitie/45ACP-1.jpg" },
+            { displayName: "cal .12", commandIG: "ammo-shotgun", image: "https://www.boutique-sd-equipements.fr/4388/carte-de-5-cartouches-gomme-cogne-sapl.jpg" },
+            { displayName: "cal .50sniper", commandIG: "ammo-heavysniper", image: "https://static.wikia.nocookie.net/tlaststand/images/4/4c/50cal.jpg/revision/latest?cb=20120127164655" },
+            { displayName: "cal 5.56x45", commandIG: "ammo-rifle", image: "https://europarm.fr/files/bibliotheque/photos-produits/MR1045-05.jpg?v=2024-02-21%2009%3A40%3A08" },
+            { displayName: "cal .9mm", commandIG: "ammo-9", image: "https://steinelammo.com/wp-content/uploads/2020/02/9mm-124gr-subcompact-carry.jpg" },
+        ];
+
+        function afficherItems(liste) {
+            $("#listeItems .item").remove();
+            liste.forEach((item) => {
+                $("#listeItems").append(`
+    <div class="item" data-command="${item.commandIG}">
+      <div class="col">${item.displayName}</div>
+      <div class="col">${item.commandIG}</div>
+      <div class="col"><img src="${item.image}" alt=""></div>
+    </div>
+  `);
+            });
+        }
+
+        $(document).ready(function () {
+            afficherItems(items);
+
+            $("#searchBox").on("input", function () {
+                const recherche = $(this).val().toLowerCase();
+                let visible = 0;
+
+                $(".item").each(function () {
+                    const displayName = $(this).find(".col:first").text().toLowerCase();
+                    const commandIG = $(this).data("command").toLowerCase();
+                    if (
+                        displayName.includes(recherche) ||
+                        commandIG.includes(recherche)
+                    ) {
+                        $(this).show();
+                        visible++;
+                    } else {
+                        $(this).hide();
+                    }
+                });
+
+                if (visible === 0) {
+                    $("#message").show();
+                } else {
+                    $("#message").hide();
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
